@@ -1,3 +1,67 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+	"ignorePatterns": ["*.d.ts"],
+	"parser": "@typescript-eslint/parser",
+	"extends": [
+		"next/core-web-vitals",
+		"plugin:react/recommended",
+		"plugin:@tanstack/eslint-plugin-query/recommended",
+		"plugin:@typescript-eslint/recommended",
+		"airbnb",
+		"airbnb-typescript",
+		"plugin:prettier/recommended"
+	],
+	"plugins": ["react", "simple-import-sort"],
+	"parserOptions": {
+		"project": "./tsconfig.json"
+	},
+	"rules": {
+		"@typescript-eslint/no-explicit-any": "off",
+		"no-plusplus": "off",
+		"react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }],
+		"react/state-in-constructor": "off",
+		"react/no-array-index-key": "off",
+		"simple-import-sort/exports": "error",
+		"simple-import-sort/imports": [
+			"error",
+			{
+				"groups": [
+					["^\\u0000", "^@public"],
+					["^react"],
+					["^next"],
+					["^@mui"],
+					["^@?\\w", "^react-", "^react-icons"],
+					["^@shared", "^@components", "^@constants", "^@lib", "^@/"] // Custom groups
+				]
+			}
+		],
+		"react-hooks/exhaustive-deps": "off",
+		"react/react-in-jsx-scope": "off",
+		"react/jsx-props-no-spreading": "off",
+		"react/display-name": "off",
+		"react/require-default-props": "off",
+		"@tanstack/query/exhaustive-deps": 1,
+		"import/no-extraneous-dependencies": [
+			"off",
+			{
+				"devDependencies": false,
+				"optionalDependencies": false,
+				"peerDependencies": false
+			}
+		],
+		"import/prefer-default-export": "off",
+		"import/no-cycle": "off",
+		"react/function-component-definition": [
+			2,
+			{ "namedComponents": "arrow-function" }
+		],
+		"react/jsx-one-expression-per-line": "off",
+		"prettier/prettier": ["error", { 
+			"endOfLine": "auto"
+		}],
+		"object-curly-newline": "off",
+		"linebreak-style": "off",
+		"implicit-arrow-linebreak": "off",
+		"no-unused-vars": "warn",
+		"@typescript-eslint/no-unused-vars": "warn"
+	}
 }
