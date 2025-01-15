@@ -4,8 +4,8 @@ import { useMemo } from 'react';
 
 import IconButton from '@mui/material/IconButton';
 
-import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
+import { motion } from 'motion/react';
 
 import useGetUserInfo from '@/lib/hooks/service/auth/useGetUserInfo';
 import useGetPermissionUser from '@/lib/hooks/service/permission/useGetPermissionUser';
@@ -29,10 +29,26 @@ const SideNav = () => {
     return NAV_ITEMS.map((overview) => {
       const tempNav = overview.items.map((item) => {
         if (item.children) {
-          const filteredChildren = item.children.filter((child) =>
-            checkPermission(child.permission_module, 'view'),
+          const tempNav2 = item.children.map((child) => {
+            if (child.children) {
+              const filteredNav2 = child.children.filter((child2) =>
+                checkPermission(child2.permission_module, 'view'),
+              );
+
+              return { ...child, children: filteredNav2 };
+            }
+            return child;
+          });
+
+          const filteredChildren = tempNav2.filter(
+            (child) =>
+              (child.children?.length || 0) > 0 || checkPermission(child.permission_module, 'view'),
           );
-          return { ...item, children: filteredChildren };
+
+          return {
+            ...item,
+            children: filteredChildren,
+          };
         }
         return item;
       });
@@ -54,7 +70,8 @@ const SideNav = () => {
   return (
     <motion.nav
       animate={{
-        width: isSideNavOpen ? '300px' : '90px',
+        width: isSideNavOpen ? '310px' : '100px',
+        type: 'spring',
       }}
       className="fixed left-0 top-0 z-[99] h-screen overflow-visible border-r border-gray-200 px-1"
     >
@@ -63,6 +80,7 @@ const SideNav = () => {
         animate={{
           x: '50%',
           rotate: isSideNavOpen ? 180 : 0,
+          type: 'spring',
         }}
       >
         <IconButton

@@ -31,4 +31,5 @@ const useLogout = (callback?: () => void) => {
     },
   });
 };
+
 export default useLogout;

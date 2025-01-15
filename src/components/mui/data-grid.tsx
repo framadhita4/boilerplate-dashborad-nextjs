@@ -16,9 +16,17 @@ const CustomIcon = (IconComponent: any) =>
     return <IconComponent size={20} {...props} />;
   };
 
-const DataGrid = ({ className, slotProps, slots, paginationResponse, ...props }: Props) => {
+const DataGrid = ({
+  className,
+  slotProps,
+  slots,
+  paginationResponse,
+  columns,
+  ...props
+}: Props) => {
   const rowCountRef = useRef(paginationResponse?.total_data || 0);
-  const paginationMetaRef = useRef<GridPaginationMeta>();
+  const paginationMetaRef = useRef<GridPaginationMeta>(undefined);
+  const prevPaginationResponse = useRef(paginationResponse);
 
   const rowCount = useMemo(() => {
     if (paginationResponse?.total_data !== undefined) {
@@ -37,7 +45,20 @@ const DataGrid = ({ className, slotProps, slots, paginationResponse, ...props }:
       paginationMetaRef.current = { hasNextPage };
     }
     return paginationMetaRef.current;
-  }, [paginationResponse?.next_page]);
+  }, [paginationResponse]);
+
+  const memoizedPaginationResponse = useMemo(() => {
+    if (
+      typeof paginationResponse === 'undefined' &&
+      typeof prevPaginationResponse.current === 'undefined'
+    )
+      return undefined;
+
+    if (typeof paginationResponse === 'undefined') return prevPaginationResponse.current;
+
+    prevPaginationResponse.current = paginationResponse;
+    return paginationResponse;
+  }, [paginationResponse]);
 
   return (
     <MuiDataGrid
@@ -49,9 +70,9 @@ const DataGrid = ({ className, slotProps, slots, paginationResponse, ...props }:
         },
       }}
       pageSizeOptions={[5, 10, 20, 50]}
-      rowCount={paginationResponse ? rowCount : undefined}
-      paginationMode={paginationResponse ? 'server' : 'client'}
-      paginationMeta={paginationResponse ? paginationMeta : undefined}
+      rowCount={memoizedPaginationResponse ? rowCount : undefined}
+      paginationMode={memoizedPaginationResponse ? 'server' : 'client'}
+      paginationMeta={memoizedPaginationResponse ? paginationMeta : undefined}
       rowHeight={88}
       checkboxSelection
       disableRowSelectionOnClick
@@ -62,7 +83,7 @@ const DataGrid = ({ className, slotProps, slots, paginationResponse, ...props }:
         },
         columnsManagement: {
           getTogglableColumns: () =>
-            props.columns.filter((col) => !col.disableColumnMenu).map((col) => col.field),
+            columns.filter((col) => !col.disableColumnMenu).map((col) => col.field),
         },
         ...slotProps,
       }}
@@ -80,6 +101,10 @@ const DataGrid = ({ className, slotProps, slots, paginationResponse, ...props }:
       }}
       sx={{ borderRadius: '0.6rem' }}
       className={cn('flex-grow', className)}
+      columns={columns.map((col) => ({
+        minWidth: col.width ? 0 : 100 * (col.flex || 1),
+        ...col,
+      }))}
       {...props}
     />
   );

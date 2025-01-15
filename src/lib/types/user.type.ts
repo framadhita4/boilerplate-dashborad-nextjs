@@ -1,16 +1,14 @@
 import { CreatedUpdatedType, FileStorageType } from './globals.type';
 import RoleType from './role.type';
 
-interface UserType extends CreatedUpdatedType {
+interface UserType {
   uuid: string;
+  name: string;
   email: string;
   role: RoleType;
-  photo: FileStorageType;
-  user_information: {
-    name: string;
-    phone_number: string;
-    position: string;
-  };
+  last_login: Date;
+  status: boolean;
+  project_assigned: number;
 }
 
 export default UserType;

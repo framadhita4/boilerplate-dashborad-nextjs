@@ -1,13 +1,13 @@
 import { memo } from 'react';
 
 import InputAdornment from '@mui/material/InputAdornment';
-import { GridToolbarContainer } from '@mui/x-data-grid';
+import { GridToolbarContainer, GridToolbarProps } from '@mui/x-data-grid';
 
 import { Search } from 'lucide-react';
 
 import TextInput from '@/components/ui/form/TextInput';
 
-export interface UserTableToolbarProps {
+export interface UserTableToolbarProps extends GridToolbarProps {
   onSearch: (searchText: string) => void;
 }
 

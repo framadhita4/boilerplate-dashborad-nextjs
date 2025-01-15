@@ -96,4 +96,5 @@ const ProfileImageInput = <T extends FieldValues>({
     />
   );
 };
+
 export default ProfileImageInput;

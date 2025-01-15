@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { use, useMemo } from 'react';
 
 import DashboardTitle from '@/components/ui/dashboard/DashboardTitle';
 import useGetRole from '@/lib/hooks/service/role/useGetRole';
@@ -8,7 +8,9 @@ import useUpdateRole from '@/lib/hooks/service/role/useUpdateRole';
 
 import RoleForm from '../_components/RoleForm';
 
-const Page = ({ params: { uuid } }: { params: { uuid: string } }) => {
+const Page = ({ params: paramsPromise }: { params: Promise<{ uuid: string }> }) => {
+  const { uuid } = use(paramsPromise);
+
   const { data } = useGetRole(uuid);
   const { mutate, isPending } = useUpdateRole(uuid);
 

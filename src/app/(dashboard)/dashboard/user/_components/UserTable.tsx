@@ -9,7 +9,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { GridColDef } from '@mui/x-data-grid';
 
+import { randBoolean, randEmail, randFullName, randNumber, randPastDate } from '@ngneat/falso';
 import { useDebounce } from '@uidotdev/usehooks';
+import dayjs from 'dayjs';
 import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
 
 import DataGrid from '@/components/mui/data-grid';
@@ -19,6 +21,7 @@ import { usePermission } from '@/lib/hooks/service/permission/usePermission';
 import useDeleteUser from '@/lib/hooks/service/user/useDeleteUser';
 import useGetUsers from '@/lib/hooks/service/user/useGetUsers';
 import useTablePagination from '@/lib/hooks/useTablePagination';
+import UserType from '@/lib/types/user.type';
 import generateCreatedUpdatedColumn from '@/lib/utils/generateCreatedUpdatedColumn';
 import searchFilter from '@/lib/utils/searchFilter';
 
@@ -54,32 +57,19 @@ const UserTable = () => {
       field: 'name',
       headerName: 'Name',
       hideable: false,
-      flex: 3,
-      renderCell: (params) => {
-        const { row } = params;
-        return (
-          <div className="flex h-full items-center gap-3 py-3">
-            <Avatar className="size-12" src={row.photo?.url} />
-            <Typography variant="body1" className="truncate">
-              {row.user_information.name}
-              <br />
-              <Typography variant="caption">{row.email}</Typography>
-            </Typography>
-          </div>
-        );
-      },
-    },
-    {
-      field: 'position',
-      headerName: 'Position',
-      flex: 1,
-      valueGetter: (_, v) => v.user_information.position,
-    },
-    {
-      field: 'phone_number',
-      headerName: 'Phone number',
-      flex: 1,
-      valueGetter: (_, v) => v.user_information.phone_number,
+      flex: 2,
+      // renderCell: (params) => {
+      //   const { row } = params;
+      //   return (
+      //     <div className="flex h-full items-center gap-3 py-3">
+      //       <Typography variant="body1" className="truncate">
+      //         {row.name}
+      //         <br />
+      //         <Typography variant="caption">{row.email}</Typography>
+      //       </Typography>
+      //     </div>
+      //   );
+      // },
     },
     {
       field: 'role_name',
@@ -87,7 +77,28 @@ const UserTable = () => {
       flex: 1,
       valueGetter: (_, v) => v.role.name,
     },
-    ...generateCreatedUpdatedColumn(),
+    {
+      field: 'email',
+      headerName: 'Email',
+      flex: 1,
+    },
+    {
+      field: 'last_login',
+      headerName: 'Last Login',
+      flex: 1,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 1,
+      type: 'boolean',
+    },
+    {
+      field: 'project_assigned',
+      headerName: 'Project Assigned',
+      flex: 1,
+    },
+    // ...generateCreatedUpdatedColumn(),
     {
       field: 'uuid',
       headerName: '',
@@ -131,24 +142,22 @@ const UserTable = () => {
     },
   ];
 
-  // const [searchText, setSearchText] = useState('');
-  // const debounceSearch = useDebounce(searchText, 300);
-
-  // const filteredRows = useMemo(() => {
-  //   return searchFilter(data, debounceSearch, [
-  //     'user_information.name',
-  //     'email',
-  //     'user_information.phone_number',
-  //     'user_information.position',
-  //     'role.name',
-  //   ]);
-  // }, [debounceSearch, data]);
-
   return (
     <>
       <div className="flex h-1 flex-grow flex-col">
         <DataGrid
-          rows={data}
+          rows={Array.from({ length: 10 }).map(() => ({
+            id: randNumber({ min: 10000, max: 99999 }).toString(),
+            name: randFullName(),
+            email: randEmail(),
+            last_login: dayjs(randPastDate()).format('YYYY-MM-DD HH:mm:ss'),
+            project_assigned: randNumber({ min: 1, max: 20 }),
+            status: randBoolean(),
+            role: {
+              name: 'Admin',
+              uuid: randNumber({ min: 10000, max: 99999 }).toString(),
+            },
+          }))}
           columns={columns}
           loading={isLoading}
           checkboxSelection={false}
@@ -160,9 +169,9 @@ const UserTable = () => {
           slots={{
             toolbar: UserTableToolbar as any,
           }}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          paginationResponse={rawData?.pagination}
+          // paginationModel={paginationModel}
+          // onPaginationModelChange={setPaginationModel}
+          // paginationResponse={rawData?.pagination}
         />
       </div>
       <DeleteConfirmationModal

@@ -1,13 +1,15 @@
 'use client';
 
-import { useMemo } from 'react';
+import { use, useMemo } from 'react';
 
 import DashboardTitle from '@/components/ui/dashboard/DashboardTitle';
 import useGetRole from '@/lib/hooks/service/role/useGetRole';
 
 import PermissionTable from './_components/PermissionTable';
 
-const Page = ({ params: { uuid } }: { params: { uuid: string } }) => {
+const Page = ({ params: paramsPromise }: { params: Promise<{ uuid: string }> }) => {
+  const { uuid } = use(paramsPromise);
+
   const { data } = useGetRole(uuid);
 
   const breadcrumbs = useMemo(() => {

@@ -1,5 +1,7 @@
 'use client';
 
+import { use } from 'react';
+
 import DashboardTitle from '@/components/ui/dashboard/DashboardTitle';
 import useGetUser from '@/lib/hooks/service/user/useGetUser';
 import useUpdateUser from '@/lib/hooks/service/user/useUpdateUser';
@@ -7,7 +9,9 @@ import useUpdateUser from '@/lib/hooks/service/user/useUpdateUser';
 import UserForm from '../_components/UserForm';
 import { UserFormType } from '../_utils/user-schema';
 
-const Page = ({ params: { uuid } }: { params: { uuid: string } }) => {
+const Page = ({ params: paramsPromise }: { params: Promise<{ uuid: string }> }) => {
+  const { uuid } = use(paramsPromise);
+
   const breadcrumbs = [
     {
       label: 'Dashboard',
@@ -60,4 +64,5 @@ const Page = ({ params: { uuid } }: { params: { uuid: string } }) => {
     </main>
   );
 };
+
 export default Page;

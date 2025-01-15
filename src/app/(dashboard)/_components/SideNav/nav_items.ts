@@ -33,6 +33,7 @@ export interface OverViewItem_2 {
   pathname: string;
   isHome?: boolean;
   permission_module: string;
+  children?: OverViewItem_2[];
 }
 
 export interface NavItem {

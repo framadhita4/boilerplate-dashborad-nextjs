@@ -73,4 +73,5 @@ const NavButton = ({ item }: { item: OverViewItem }) => {
     </>
   );
 };
+
 export default NavButton;

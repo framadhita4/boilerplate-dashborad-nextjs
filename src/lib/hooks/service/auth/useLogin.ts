@@ -46,4 +46,5 @@ const useLogin = ({ callback, errorCallback }: CallbackType) => {
     },
   });
 };
+
 export default useLogin;
